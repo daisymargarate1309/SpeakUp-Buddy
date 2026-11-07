@@ -90,12 +90,14 @@ recordBtn.addEventListener("click", () => {
   mediaRecorder = new MediaRecorder(micStream);
 
   mediaRecorder.ondataavailable = (e) => chunks.push(e.data);
-
   mediaRecorder.onstop = () => {
     const blob = new Blob(chunks, { type: mediaRecorder.mimeType });
     console.log("Recorded:", blob.size, "bytes");
-  };
 
+    const player = document.getElementById("player");
+    player.src = URL.createObjectURL(blob);
+    player.hidden = false;
+  };
   mediaRecorder.start();
   recordBtn.disabled = true;
   stopBtn.disabled = false;
