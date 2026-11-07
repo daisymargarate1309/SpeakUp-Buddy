@@ -81,3 +81,30 @@ nextBtn.addEventListener("click", () => {
     highlight();
   }
 });
+const stopBtn = document.getElementById("stopBtn");
+let mediaRecorder = null;
+let chunks = [];
+
+recordBtn.addEventListener("click", () => {
+  chunks = [];
+  mediaRecorder = new MediaRecorder(micStream);
+
+  mediaRecorder.ondataavailable = (e) => chunks.push(e.data);
+
+  mediaRecorder.onstop = () => {
+    const blob = new Blob(chunks, { type: mediaRecorder.mimeType });
+    console.log("Recorded:", blob.size, "bytes");
+  };
+
+  mediaRecorder.start();
+  recordBtn.disabled = true;
+  stopBtn.disabled = false;
+  doneMsg.textContent = "🔴 Recording...";
+});
+
+stopBtn.addEventListener("click", () => {
+  mediaRecorder.stop();
+  recordBtn.disabled = false;
+  stopBtn.disabled = true;
+  doneMsg.textContent = "✅ Recording saved";
+});
